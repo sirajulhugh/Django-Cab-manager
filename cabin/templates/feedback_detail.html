@@ -1,0 +1,190 @@
+{% extends 'nav.html' %}
+{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Cabby</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/kMVq1zNzz4gVNT6PS8k2jqf3r59j6z6Lg6cy50x+joBzO32ltcxRz+N1H7ddF69FfNRn6jIsVyZDA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            background: url("{% static 'images/buble.jpg' %}") no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            color: #333;
+        }
+
+        section {
+            display: flex;
+            justify-content: center;
+            color: #333;
+            padding-top: 20px;
+        }
+
+        .content-container {
+            width: 100%;
+            max-width: 700px;
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease;
+            border: 5px solid gold; /* Adds a golden border */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        h1, h2 {
+            font-size: 1.5rem;
+            color: #b2bd1e;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            color: #c1b019;
+            margin-top: 1.5rem;
+            text-align: left;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.5;
+            margin: 0.5rem 0;
+        }
+
+        .btn-back {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            margin-top: 1.5rem;
+            background-color: #a5bc1e;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background-color: #697e14;
+        }
+        /* General card styling */
+.card {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 20px 0;
+    animation: fadeIn 0.8s ease-in-out;
+    transition: transform 0.3s ease-in-out;
+    border: 2px solid gold; /* Adds a golden border */
+}
+
+/* Card hover effect */
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Section title styling */
+.section-title {
+    font-size: 1.5em;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Trip details layout */
+.trip-details {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    
+}
+
+/* Each column in trip details */
+.trip-column {
+    flex: 1;
+}
+
+/* Text styling for each trip detail */
+.trip-column p, .card p {
+    margin: 10px 0;
+    color: #555;
+    font-size: 1em;
+}
+
+/* Responsive design for larger screens */
+@media (min-width: 768px) {
+    .trip-details {
+        flex-direction: row; /* Two columns side-by-side on larger screens */
+    }
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 767px) {
+    .trip-details {
+        flex-direction: column; /* Stacks columns vertically on small screens */
+    }
+}
+
+/* Animation for card fade-in */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+    </style>
+</head>
+<body>
+    <section>
+        <div class="content-container">
+            <h1>Feedback Detail for Trip {{ feedback.trip.trip_number }}</h1>
+
+            <div class="card">
+                <h2 class="section-title">Trip Details</h2>
+                <div class="trip-details">
+                    <div class="trip-column">
+                        <p><strong>Vehicle Name:</strong> {{ feedback.trip.vehicle_name }}</p>
+                        <p><strong>Vehicle Number:</strong> {{ feedback.trip.vehicle_number }}</p>
+                        <p><strong>Guest Name:</strong> {{ feedback.trip.guest_name }}</p>
+                        <p><strong>Starting Place:</strong> {{ feedback.trip.starting_place }}</p>
+                    </div>
+                    <div class="trip-column">
+                        <p><strong>Ending Place:</strong> {{ feedback.trip.ending_place }}</p>
+                        <p><strong>Starting Date:</strong> {{ feedback.trip.date }}</p>
+                        <p><strong>Ending Date:</strong> {{ feedback.trip.end_date }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2 class="section-title">Feedback</h2>
+                <p><strong>Rating:</strong> {{ feedback.rating }}</p>
+                <p><strong>Comments:</strong> {{ feedback.comments }}</p>
+                <p><strong>Feedback Date:</strong> {{ feedback.feedback_date }}</p>
+            </div>
+            
+
+            <a href="{% url 'feedback_list' %}" class="btn-back" style="display: flex; justify-content: center; align-items: center; text-align: center; width: 100%;">
+                <i class="fas fa-arrow-left"></i> Back to Feedback List
+            </a>
+            
+        </div>
+    </section>
+</body>
+</html>
+{% endblock %}

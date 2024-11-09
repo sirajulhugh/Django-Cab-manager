@@ -1,0 +1,338 @@
+def add_trip(request):
+    driver_name = ""
+    if request.user.is_authenticated:
+        try:
+            driver = Driver.objects.get(user=request.user)
+            driver_name = driver.full_name
+        except Driver.DoesNotExist:
+            driver_name = "No driver information available"
+
+    if request.method == 'POST':
+        trip_id = request.POST.get('trip_id')  # Check if trip_id is provided for overwriting
+
+        # Check if an existing trip is being updated
+        trip = None
+        if trip_id:
+            try:
+                trip = Trip.objects.get(id=trip_id, user=request.user)
+            except Trip.DoesNotExist:
+                trip = None  # Fallback if no existing trip is found
+
+        # Gather data from the form
+        trip_data = {
+            "trip_number": request.POST.get('trip_number'),
+            "vehicle_name": request.POST.get('vehicle_name'),
+            "vehicle_number": request.POST.get('vehicle_number'),
+            "date": request.POST.get('date', timezone.now().date()),
+            "end_date": request.POST.get('end_date', timezone.now().date()),
+            "guest_name": request.POST.get('guest_name'),
+            "starting_km": request.POST.get('starting_km'),
+            "ending_km": request.POST.get('ending_km'),
+            "starting_place": request.POST.get('starting_place'),
+            "ending_place": request.POST.get('ending_place'),
+            "starting_time": request.POST.get('starting_time'),
+            "ending_time": request.POST.get('ending_time'),
+            "fixed_charge": request.POST.get('fixed_charge'),
+            "max_kilometers": request.POST.get('max_kilometers'),
+            "extra_running_charge": request.POST.get('extra_running_charge'),
+            "advance": request.POST.get('advance', 0),
+            "permit": request.POST.get('permit', 0),
+            "entrance": request.POST.get('entrance', 0),
+            "user": request.user
+        }
+
+        # Create or update trip
+        if trip:
+            for key, value in trip_data.items():
+                setattr(trip, key, value)
+            trip.save()
+        else:
+            trip = Trip.objects.create(**trip_data)
+
+        # Handle dynamic tolls and associate with the trip, avoiding duplicates
+        toll_amounts = request.POST.getlist('toll_amount[]')
+        for i, amount in enumerate(toll_amounts):
+            if amount:
+                toll_instance = Toll.objects.filter(trip=trip).first() if i == 0 else Toll.objects.filter(trip=trip, amount=amount).first()
+                
+                if toll_instance:
+                    # Update if a record exists
+                    toll_instance.amount = amount
+                    toll_instance.save()
+                else:
+                    # Create new if no existing record found
+                    Toll.objects.create(amount=amount, trip=trip)
+
+        # Handle dynamic parking fees and associate with the trip, avoiding duplicates
+        parking_amounts = request.POST.getlist('parking_amount[]')
+        for i, amount in enumerate(parking_amounts):
+            if amount:
+                parking_instance = Parking.objects.filter(trip=trip).first() if i == 0 else Parking.objects.filter(trip=trip, amount=amount).first()
+                
+                if parking_instance:
+                    # Update if a record exists
+                    parking_instance.amount = amount
+                    parking_instance.save()
+                else:
+                    # Create new if no existing record found
+                    Parking.objects.create(amount=amount, trip=trip)
+
+        # Handle dynamic guides and associate with the trip, avoiding duplicates
+        guide_places = request.POST.getlist('guide_place[]')
+        guide_fees = request.POST.getlist('guide_fee[]')
+        for place, fee in zip(guide_places, guide_fees):
+            if place and fee:
+                guide_instance = Guide.objects.filter(trip=trip).first() if guide_places.index(place) == 0 else Guide.objects.filter(trip=trip, guide_place=place, guide_fee=fee).first()
+                
+                if guide_instance:
+                    # Update if a record exists
+                    guide_instance.guide_place = place
+                    guide_instance.guide_fee = fee
+                    guide_instance.save()
+                else:
+                    # Create new if no existing record found
+                    Guide.objects.create(guide_place=place, guide_fee=fee, trip=trip)
+
+        # Handle other fees and associate with the trip, avoiding duplicates
+        reasons = request.POST.getlist('reason[]')
+        values = request.POST.getlist('value[]')
+        for reason, value in zip(reasons, values):
+            if reason and value:
+                otherfee_instance = Otherfee.objects.filter(trip=trip).first() if reasons.index(reason) == 0 else Otherfee.objects.filter(trip=trip, reason=reason, value=value).first()
+                
+                if otherfee_instance:
+                    # Update if a record exists
+                    otherfee_instance.reason = reason
+                    otherfee_instance.value = value
+                    otherfee_instance.save()
+                else:
+                    # Create new if no existing record found
+                    Otherfee.objects.create(reason=reason, value=value, trip=trip)
+
+        return redirect('trip_list')  # Redirect to a trip list page after saving
+
+    return render(request, 'add_trip.html', {'driver_name': driver_name})
+
+
+<script>
+    function populateTripForm(data) {
+                document.getElementById("trip_number").value = data.trip_number;
+                document.getElementById("vehicle_name").value = data.vehicle_name;
+                document.getElementById("vehicle_number").value = data.vehicle_number;
+                document.getElementById("guest_name").value = data.guest_name;
+                document.getElementById("starting_place").value = data.starting_place;
+                document.getElementById("ending_place").value = data.ending_place;
+                document.getElementById("starting_km").value = data.starting_km;
+                document.getElementById("ending_km").value = data.ending_km;
+                document.getElementById("starting_time").value = data.starting_time;
+                document.getElementById("ending_time").value = data.ending_time;
+                document.getElementById("date").value = data.date;
+                document.getElementById("end_date").value = data.end_date;
+                document.getElementById("fixed_charge").value = data.fixed_charge;
+                document.getElementById("max_kilometers").value = data.max_kilometers;
+                document.getElementById("extra_running_charge").value = data.extra_running_charge;
+                document.getElementById("driver_name").value = data.driver_name;
+                document.getElementById("permit").value = data.permit;
+                document.getElementById("entrance").value = data.entrance;
+                document.getElementById("advance").value = data.advance;
+
+                // Populate guide rows
+                const guideSection = document.getElementById("guide-section");
+                if (guideSection) {
+                    data.guides.forEach(guide => {
+                        const newGuideRow = document.createElement("div");
+                        newGuideRow.classList.add("row");
+
+                        newGuideRow.innerHTML = `
+                            <div class="col-md-5 mb-3">
+                                <input type="text" name="guide_place[]" class="form-control" placeholder="Guide Place" value="${guide.guide_place}">
+                            </div>
+                            <div class="col-md-5 mb-3">
+                                <input type="number" name="guide_fee[]" class="form-control" placeholder="Guide Fee" value="${guide.guide_fee}">
+                            </div>
+                            <div class="col-md-2 mb-3 add-remove-btns">
+                                <span class="btn btn-danger remove icon-small"><i class="bi bi-dash"></i></span>
+                            </div>
+                        `;
+
+                        newGuideRow.querySelector(".remove").addEventListener("click", function() {
+                            newGuideRow.remove();
+                        });
+
+                        guideSection.appendChild(newGuideRow);
+                    });
+                } else {
+                    console.error("Guide section not found!");
+                }
+
+                // Populate other fee rows
+                const otherFeeSection = document.getElementById("other-section");
+                if (otherFeeSection) {
+                    data.other_fees.forEach(fee => {
+                        const newOtherFeeRow = document.createElement("div");
+                        newOtherFeeRow.classList.add("row");
+
+                        newOtherFeeRow.innerHTML = `
+                            <div class="col-md-5 mb-3">
+                                <input type="text" name="reason[]" class="form-control" placeholder="Reason" value="${fee.reason}">
+                            </div>
+                            <div class="col-md-5 mb-3">
+                                <input type="number" name="value[]" class="form-control" placeholder="Fee Value" value="${fee.value}">
+                            </div>
+                            <div class="col-md-2 mb-3 add-remove-btns">
+                                <span class="btn btn-danger remove icon-small"><i class="bi bi-dash"></i></span>
+                            </div>
+                        `;
+
+                        newOtherFeeRow.querySelector(".remove").addEventListener("click", function() {
+                            newOtherFeeRow.remove();
+                        });
+
+                        otherFeeSection.appendChild(newOtherFeeRow);
+                    });
+                } else {
+                    console.error("Other fee section not found!");
+                }
+
+                // Populate toll rows
+                const tollSection = document.getElementById("toll-section");
+                if (tollSection) {
+                    data.tolls.forEach(toll => {
+                        const newTollRow = document.createElement("div");
+                        newTollRow.classList.add("row");
+
+                        newTollRow.innerHTML = `
+                            <div class="col-md-5 mb-3">
+                                <input type="number" name="toll_amount[]" class="form-control" placeholder="Toll Amount" value="${toll.amount}">
+                            </div>
+                            <div class="col-md-2 mb-3 add-remove-btns">
+                                <span class="btn btn-danger remove icon-small"><i class="bi bi-dash"></i></span>
+                            </div>
+                        `;
+
+                        newTollRow.querySelector(".remove").addEventListener("click", function() {
+                            newTollRow.remove();
+                        });
+
+                        tollSection.appendChild(newTollRow);
+                    });
+                } else {
+                    console.error("Toll section not found!");
+                }
+
+                // Populate parking fee rows
+                const parkingSection = document.getElementById("parking-section");
+                if (parkingSection) {
+                    data.parking_fees.forEach(parking => {
+                        const newParkingRow = document.createElement("div");
+                        newParkingRow.classList.add("row");
+
+                        newParkingRow.innerHTML = `
+                            <div class="col-md-5 mb-3">
+                                <input type="number" name="parking_amount[]" class="form-control" placeholder="Parking Amount" value="${parking.amount}">
+                            </div>
+                            <div class="col-md-2 mb-3 add-remove-btns">
+                                <span class="btn btn-danger remove icon-small"><i class="bi bi-dash"></i></span>
+                            </div>
+                        `;
+
+                        newParkingRow.querySelector(".remove").addEventListener("click", function() {
+                            newParkingRow.remove();
+                        });
+
+                        parkingSection.appendChild(newParkingRow);
+                    });
+                } else {
+                    console.error("Parking section not found!");
+                }
+
+                // Perform calculations if functions exist
+                if (typeof calculateTripDays === "function") calculateTripDays();
+                if (typeof calculateTotalDistance === "function") calculateTotalDistance();
+                if (typeof calculateTotalCharge === "function") calculateTotalCharge();
+            }
+</script>
+
+
+
+
+
+def get_last_ride(request):
+    if request.user.is_authenticated:
+        last_trip = Trip.objects.filter(user=request.user).order_by('-id').first()
+        
+        if last_trip:
+            # Filter out duplicate guide entries
+            guides = list(last_trip.guides.values('guide_place', 'guide_fee'))
+            unique_guides = []
+            seen_guides = set()
+            for guide in guides:
+                guide_tuple = (guide['guide_place'], guide['guide_fee'])
+                if guide_tuple not in seen_guides:
+                    seen_guides.add(guide_tuple)
+                    unique_guides.append(guide)
+
+            # Filter out duplicate other fee entries
+            other_fees = list(last_trip.other_fees.values('reason', 'value'))
+            unique_other_fees = []
+            seen_other_fees = set()
+            for fee in other_fees:
+                fee_tuple = (fee['reason'], fee['value'])
+                if fee_tuple not in seen_other_fees:
+                    seen_other_fees.add(fee_tuple)
+                    unique_other_fees.append(fee)
+
+            # Filter out duplicate toll entries
+            tolls = list(last_trip.tolls.values('amount'))
+            unique_tolls = []
+            seen_tolls = set()
+            for toll in tolls:
+                toll_amount = toll['amount']
+                if toll_amount not in seen_tolls:
+                    seen_tolls.add(toll_amount)
+                    unique_tolls.append(toll)
+
+            # Filter out duplicate parking entries
+            parking_fees = list(last_trip.parking_fees.values('amount'))
+            unique_parking_fees = []
+            seen_parking_fees = set()
+            for parking in parking_fees:
+                parking_amount = parking['amount']
+                if parking_amount not in seen_parking_fees:
+                    seen_parking_fees.add(parking_amount)
+                    unique_parking_fees.append(parking)
+
+            # Prepare the response data
+            data = {
+                'success': True,
+                'guides': unique_guides,
+                'other_fees': unique_other_fees,
+                'tolls': unique_tolls,
+                'parking_fees': unique_parking_fees,
+                'trip_id': last_trip.id,  # Send the trip ID
+                'driver_name': last_trip.driver_name,
+                'trip_number': last_trip.trip_number,  # Add trip number
+                'vehicle_name': last_trip.vehicle_name,
+                'vehicle_number': last_trip.vehicle_number,
+                'guest_name': last_trip.guest_name,
+                'starting_place': last_trip.starting_place,
+                'ending_place': last_trip.ending_place,
+                'starting_km': last_trip.starting_km,
+                'ending_km': last_trip.ending_km,
+                'starting_time': last_trip.starting_time,
+                'ending_time': last_trip.ending_time,
+                'date': last_trip.date,
+                'end_date': last_trip.end_date,
+                'fixed_charge': last_trip.fixed_charge,
+                'max_kilometers': last_trip.max_kilometers,
+                'extra_running_charge': last_trip.extra_running_charge,
+                'permit': last_trip.permit,
+                'entrance': last_trip.entrance,
+                'advance': last_trip.advance,
+            }
+        else:
+            data = {'success': False, 'message': 'No last ride found for this user.'}
+    else:
+        data = {'success': False, 'error': 'User not authenticated'}
+    
+    return JsonResponse(data)

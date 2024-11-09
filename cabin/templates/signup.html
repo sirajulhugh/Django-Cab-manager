@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cabby</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background: url("{% static 'images/buble.jpg' %}") no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* height: 90vh; */
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .signup-container {
+            background-color: #fff;
+            margin-top: 3px;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
+            animation: popIn 0.7s ease-in-out;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        h2 {
+            text-align: center;
+            color: #b2cb11;
+            margin-bottom: 2rem;
+            font-weight: 600;
+            font-size: 2rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #262428;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            padding: 0.75rem 1rem;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #b5cb11;
+            box-shadow: 0 0 5px rgba(126, 203, 17, 0.5);
+        }
+
+        .btn-signup {
+            background: linear-gradient(135deg, #cbc511, #cdfc25);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            font-weight: bold;
+            border-radius: 8px;
+            width: 100%;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-signup:hover {
+            background: linear-gradient(135deg, #dffc25, #b2cb11);
+        }
+
+        .feedback {
+            display: inline-block;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .feedback.text-success {
+            color: #28a745;
+        }
+
+        .feedback.text-danger {
+            color: #dc3545;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 1rem;
+            text-decoration: none;
+        }
+
+        .login-link a {
+            color: #cbc211;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .login-link a:hover {
+            color: #fcf525;
+            text-decoration: underline;
+        }
+
+        /* Styling for alerts */
+        .alert-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            animation: slideIn 0.5s ease-in-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        .fade {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+    </style>
+    <script>
+        // AJAX call to check username uniqueness
+        function checkUsername() {
+            const username = document.getElementById("username").value;
+            const usernameError = document.getElementById("usernameError");
+            const usernameSuccess = document.getElementById("usernameSuccess");
+
+            if (username.length === 0) {
+                usernameError.textContent = "";
+                usernameSuccess.textContent = "";
+                return;
+            }
+
+            fetch(`/ajax/check_username/?username=${encodeURIComponent(username)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.is_taken) {
+                        usernameError.textContent = "Username is already in use.";
+                        usernameSuccess.textContent = "";
+                    } else {
+                        usernameError.textContent = "";
+                        usernameSuccess.textContent = "Username is available.";
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        // AJAX call to check mobile number uniqueness
+        function checkMobileNumber() {
+            const mobileNumber = document.getElementById("mobile_number").value;
+            const mobileError = document.getElementById("mobileError");
+            const mobileSuccess = document.getElementById("mobileSuccess");
+
+            if (mobileNumber.length === 0) {
+                mobileError.textContent = "";
+                mobileSuccess.textContent = "";
+                return;
+            }
+
+            const mobileRegex = /^[0-9]{10}$/; // Adjust regex based on your requirements
+            if (!mobileRegex.test(mobileNumber)) {
+                mobileError.textContent = "Invalid mobile number format.";
+                mobileSuccess.textContent = "";
+                return;
+            }
+
+            fetch(`/ajax/check_mobile/?mobile_number=${encodeURIComponent(mobileNumber)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.is_taken) {
+                        mobileError.textContent = "Mobile number is already registered.";
+                        mobileSuccess.textContent = "";
+                    } else {
+                        mobileError.textContent = "";
+                        mobileSuccess.textContent = "Mobile number is available.";
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function validatePasswor() {
+            const password = document.getElementById("password").value;
+            const passwordError = document.getElementById("passwordErro");
+
+            if (password.length < 8) {
+                passwordError.textContent = "Password must be at least 8 characters long.";
+            } else if (!/[A-Z]/.test(password)) {
+                passwordError.textContent = "Password must contain at least one uppercase letter.";
+            } else if (!/[a-z]/.test(password)) {
+                passwordError.textContent = "Password must contain at least one lowercase letter.";
+            } else if (!/\d/.test(password)) {
+                passwordError.textContent = "Password must contain at least one digit.";
+            } else {
+                passwordError.textContent = "";
+            }
+        }
+
+        // Check if passwords match
+        function validatePassword() {
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("password_confirm").value;
+            const passwordError = document.getElementById("passwordError");
+            const passwordSuccess = document.getElementById("passwordSuccess");
+
+            if (confirmPassword.length === 0) {
+                passwordError.textContent = "";
+                passwordSuccess.textContent = "";
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                passwordError.textContent = "Passwords do not match.";
+                passwordSuccess.textContent = "";
+            } else {
+                passwordError.textContent = "";
+                passwordSuccess.textContent = "Passwords match.";
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="signup-container">
+        <h2>Driver Signup</h2>
+
+        <!-- Display any messages (like error or success) -->
+        <!-- {% if messages %}
+            <div id="alert-message" class="alert alert-warning alert-message" role="alert">
+                <ul>
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %} -->
+
+        <form method="POST" action="">
+            {% csrf_token %}
+            
+            <!-- Username -->
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" id="username" name="username" class="form-control" required onblur="checkUsername()">
+                <div id="usernameError" class="feedback text-danger"></div>
+                <div id="usernameSuccess" class="feedback text-success"></div>
+            </div>
+
+            <!-- Password -->
+            <!-- <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div> -->
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Password:</label>
+                <input type="password" id="password" name="password" class="form-control" required onkeyup="validatePasswor()">
+                <small id="passwordErro" class="feedback text-danger"></small>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="mb-3">
+                <label for="password_confirm" class="form-label">Confirm Password</label>
+                <input type="password" id="password_confirm" name="password_confirm" class="form-control" required oninput="validatePassword()">
+                <div id="passwordError" class="feedback text-danger"></div>
+                <div id="passwordSuccess" class="feedback text-success"></div>
+            </div>
+
+            <!-- Full Name -->
+            <div class="mb-3">
+                <label for="full_name" class="form-label">Full Name</label>
+                <input type="text" id="full_name" name="full_name" class="form-control" required>
+            </div>
+
+            <!-- Mobile Number -->
+            <div class="mb-3">
+                <label for="mobile_number" class="form-label">Mobile Number</label>
+                <input type="text" id="mobile_number" name="mobile_number" class="form-control"  pattern="\d{10}" maxlength="10" required onblur="checkMobileNumber()">
+                <div id="mobileError" class="feedback text-danger"></div>
+                <div id="mobileSuccess" class="feedback text-success"></div>
+            </div>
+
+            <button type="submit" class="btn btn-signup">Sign Up</button>
+        </form>
+
+        <p class="login-link">Already have an account? <a href="{% url 'login' %}" style="text-decoration: none;">Login here</a></p>
+    </div>
+
+    <!-- Bootstrap JS for responsiveness -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Auto-hide alerts after 5 seconds -->
+    <script>
+        setTimeout(function() {
+            var alertElement = document.getElementById('alert-message');
+            if (alertElement) {
+                alertElement.classList.add('fade');
+                setTimeout(function() {
+                    alertElement.remove();
+                }, 500); // Wait for the fade-out animation
+            }
+        }, 5000);
+    </script>
+</body>
+</html>

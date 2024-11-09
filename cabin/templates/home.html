@@ -1,0 +1,121 @@
+{% extends 'nav.html' %}
+{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cabby </title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            background: url("{% static 'images/buble.jpg' %}") no-repeat center center fixed;
+            background-size: cover;
+        }
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 5px solid gold; /* Adds a golden border */
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .terms {
+            margin-top: 30px;
+        }
+        .terms h2 {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+            border-bottom: 2px solid #d4d8fc;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        .terms p {
+            font-size: 1em;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .terms ul {
+            padding-left: 20px;
+            color: #555;
+        }
+        .terms li {
+            margin-bottom: 10px;
+        }
+        #alert-message li {
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+            background-color: #f5f5dc;
+            color: #333;
+        }
+        #alert-message {
+    padding: 0;
+}
+
+#alert-message li {
+    list-style-type: none;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+    background-color: #f5f5dc;
+    color: #333;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Cabby</h1>
+
+        <!-- Display any messages (like error or success) -->
+        {% if messages %}
+        <ul id="alert-message">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <!-- Terms and Conditions Section -->
+        <div class="terms">
+            <h2>Terms and Conditions</h2>
+            <p>As an employee of Cabby, you are required to adhere to the following terms and conditions to ensure a high standard of service and safety:</p>
+            <ul>
+                <li>All drivers must ensure vehicles are maintained in optimal condition and cleaned after each trip.</li>
+                <li>Follow all road safety regulations and ensure guests are comfortable and satisfied with the ride.</li>
+                <li>Report any issues, including vehicle breakdowns or passenger concerns, to the management immediately.</li>
+                <li>Maintain the confidentiality of guest information and uphold professional standards at all times.</li>
+                <li>Be punctual, courteous, and wear company-issued attire while on duty.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Auto-hide alert messages after 5 seconds
+        setTimeout(function() {
+            var alertElement = document.getElementById('alert-message');
+            if (alertElement) {
+                alertElement.classList.add('fade');
+                setTimeout(function() {
+                    alertElement.remove();
+                }, 150);
+            }
+        }, 5000);
+    </script>
+</body>
+</html>
+{% endblock %}

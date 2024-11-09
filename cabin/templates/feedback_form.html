@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cabby</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background: url("{% static 'images/buble.jpg' %}") no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+        }
+
+        .feedback-container {
+            max-width: 600px;
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            margin: 2rem auto;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        h2, p {
+            color: #cddd27;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            font-size: 1rem;
+            color: #333;
+            display: block;
+            margin-top: 1rem;
+        }
+
+        select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            resize: vertical;
+            font-size: 1rem;
+        }
+
+        button {
+            width: 100%;
+            background-color: #cbc822;
+            color: #fff;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 1.5rem;
+        }
+
+        button:hover {
+            background-color: #978e15;
+        }
+    </style>
+</head>
+<body>
+    <div class="feedback-container">
+        <h2>Hello {{ trip.guest_name }},</h2>
+        <p>We would love to hear your valuable feedback on your trip from {{ trip.starting_place }} to {{ trip.ending_place }}.</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            <label for="rating">Rating:</label>
+            <select name="rating" id="rating" required>
+                <option value="5">Excellent</option>
+                <option value="4">Good</option>
+                <option value="3">Average</option>
+                <option value="2">Poor</option>
+                <option value="1">Very Poor</option>
+            </select>
+
+            <label for="comments">Comments:</label>
+            <textarea name="comments" id="comments" rows="4" placeholder="Your feedback here..."></textarea>
+
+            <button type="submit">Submit Feedback</button>
+        </form>
+    </div>
+</body>
+</html>

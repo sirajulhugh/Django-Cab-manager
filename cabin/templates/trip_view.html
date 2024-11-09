@@ -1,0 +1,339 @@
+{% extends 'nav.html' %}
+{% block content %}
+{% load custom_filters %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cabby</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Add this CSS in the page's <head> or an external stylesheet */
+        @media print {
+            /* Hide everything by default */
+            body * {
+                visibility: hidden;
+            }
+            /* Show only the container you want to print */
+            .container, .container * {
+                visibility: visible;
+            }
+            /* Ensure that only the container is printed */
+            .container {
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+        }
+    </style>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            background: url("{% static 'images/buble.jpg' %}") no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 5px solid gold; /* Adds a golden border */
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .header, .details-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .charges-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .charges-table th, .charges-table td {
+            text-align: left;
+            padding: 8px;
+        }
+        .total {
+            font-weight: bold;
+            font-size: 1.1em;
+            text-align: right;
+            padding-right: 10px;
+        }
+        .remark-signature {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        .thanks-message {
+            text-align: center;
+            margin-top: 20px;
+            font-style: italic;
+            color: #2c3e50;
+        }
+        .small-text {
+            font-size: 0.9em;
+            color: #555;
+            margin-left: 20px;
+        }
+        /* Print button styling */
+        .print-btn {
+            display: block;
+            width: 100px;
+            margin: 10px auto;
+            padding: 8px;
+            background-color: #4CAF50;
+            color: #fff;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .print-btn:hover {
+            background-color: #45a049;
+        }
+        
+    </style>
+</head>
+<body><br>
+    <div class="button-container">
+        <button class="print-btn" onclick="printAsPDF()">
+            <i class="fas fa-print"></i> PDF
+        </button>
+        <button class="print-btn" onclick="printTripSheet()"> <i class="fas fa-print"></i> Print </button>
+    </div>
+    
+    <style>
+        /* Container to hold buttons in a row */
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+    
+        /* Styling for print and trips buttons */
+        .print-btn {
+            padding: 8px 12px;
+            background-color: #4CAF50;
+            color: #fff;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+    
+        /* Adjust hover effect */
+        .print-btn:hover {
+            background-color: #45a049;
+        }
+    
+        /* Adjust icon spacing */
+        .print-btn i {
+            margin-right: 5px;
+        }
+    </style>
+    
+    <!-- Download Button -->
+
+
+    <script>
+        function printTripSheet() {
+            window.print();
+        }
+    </script>
+    <div class="container">
+
+        <div class="qr-feedback-container" style="display: flex; align-items: center; gap: 20px; margin-top: 20px;">
+            <div class="qr-code" style="flex: 1;">
+                <p>Scan the QR code to give feedback:</p>
+                <p>
+                    <img src="data:image/png;base64,{{ qr_code_image|b64encode }}" alt="QR Code" style="width: 150px; height: 150px;">
+                </p>
+            </div>
+            <div class="company-info" style="flex: 1;">
+                <h3>Cabby Company INC</h3>
+                <p><strong>Address:</strong> 1234 Cab Street, Suite 101<br>New City, NC 56789</p>
+                <p><strong>Phone:</strong> (555) 123-4567</p>
+                <p><strong>Email:</strong> support@cabcompany.com</p>
+            </div>
+        </div>
+        
+        
+
+        <div style="text-align: center;">
+            <h1 style="border-bottom: 1px solid #000000;">Trip Sheet for Contract Carraiges</h1>
+        </div>
+
+        <div class="header" style="border-bottom: 1px solid #ddd;">
+            <div>
+                <p><strong>Trip No.</strong> {{ trip.trip_number }}</p>
+                <p><strong>Vehicle No.</strong> {{ trip.vehicle_number }}</p>
+                <p><strong>Guest Name:</strong> {{ trip.guest_name }}</p>
+            </div>
+            <div>
+                <p><strong>Date:</strong> {{ trip.date }}</p>
+                <p><strong>Driver Name:</strong> {{ trip.driver_name }}</p>
+                <p><strong>Advance:</strong> ₹ {{ trip.advance }}</p>
+            </div>
+        </div>
+
+        <div class="details-section">
+            <div style="display: flex; justify-content: space-between; width: 100%; padding-bottom: 10px;">
+                <div style="text-align: center; width: 20%;">
+                    <h6 style="text-decoration: underline;">Starting Place</h6>
+                    <p>{{ trip.starting_place }}</p>
+                </div>
+                <div style="text-align: center; width: 20%;">
+                    <h6 style="text-decoration: underline;">Starting Time</h6>
+                    <p>{{ trip.starting_time }}</p>
+                </div>
+                <div style="text-align: center; width: 20%;">
+                    <h6 style="text-decoration: underline;">Ending Place</h6>
+                    <p>{{ trip.ending_place }}</p>
+                </div>
+                <div style="text-align: center; width: 20%;">
+                    <h6 style="text-decoration: underline;">Ending Time</h6>
+                    <p>{{ trip.ending_time }}</p>
+                </div>
+                <div style="text-align: center; width: 20%;">
+                    <h6 style="text-decoration: underline;">Total KM</h6>
+                    <p>{{ trip.total_distance }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="charges-table" style="border-bottom: 2px solid #ddd;">
+            <h3>Total Trip Charge</h3>
+            <table>
+                <tr>
+                    <td>Fixed Charge (₹ {{ trip.fixed_charge }} per day up to {{ trip.max_kilometers }} KM)</td>
+                    <td>₹ {{ trip.min_charge }}</td>
+                </tr>
+                {% if trip.extra_charge %}
+                <tr>
+                    <td>Extra Running Charge (₹ {{ trip.extra_running_charge }} per KM over limit ({{ trip.extra_kilometers }}km))</td>
+                    <td>₹ {{ trip.extra_charge }}</td>
+                </tr>
+                {% endif %}
+                {% if trip.permit %}
+                <tr>
+                    <td>Permit</td>
+                    <td>₹ {{ trip.permit }}</td>
+                </tr>
+                {% endif %}
+                {% if trip.entrance %}
+                <tr>
+                    <td>Entrance Fees</td>
+                    <td>₹ {{ trip.entrance }}</td>
+                </tr>
+                {% endif %}
+                {% if trip.total_parking %}
+                <tr>
+                    <td>Parking</td>
+                    <td>₹ {{ trip.total_parking }}</td>
+                </tr>
+                {% endif %}
+                {% if trip.total_toll %}
+                <tr>
+                    <td>Toll</td>
+                    <td>₹ {{ trip.total_toll }}</td>
+                </tr>
+                {% endif %}
+                {% if trip.total_guide_fee %}
+                <tr>
+                    <td>Guide Fees</td>
+                    <td>₹ {{ trip.total_guide_fee }}</td>
+                </tr>
+                <tr class="small-text">
+                    <td colspan="2">
+                        {% for guide in guides %}
+                            <p>• <strong>Place:</strong> {{ guide.guide_place }} - <strong>Fee:</strong> ₹ {{ guide.guide_fee }}</p>
+                        {% empty %}
+                            <p>No guide fees recorded.</p>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endif %}
+                {% if trip.other_charge_amount %}
+                <tr>
+                    <td>Other Charges</td>
+                    <td>₹ {{ trip.other_charge_amount }}</td>
+                </tr>
+                <tr class="small-text">
+                    <td colspan="2">
+                        {% for fee in other_fees %}
+                            <p>• <strong>Reason:</strong> {{ fee.reason }} - <strong>Amount:</strong> ₹ {{ fee.value }}</p>
+                        {% empty %}
+                            <p>No additional charges recorded.</p>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endif %}
+                <tr class="total" style="border-top: 2px solid #000000;">
+                    <td>Total</td>
+                    <td>₹ {{ trip.total_charge }}</td>
+                </tr>
+                <tr class="total" style="border-bottom: 3px dotted #000000;">
+                    <td>Balance:</td>
+                    <td>₹ {{ trip.balance }}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="remark-signature">
+            <p><strong>Remark:</strong> ____________________</p>
+            <p><strong>Signature:</strong> ____________________</p>
+        </div>
+
+        <p class="thanks-message">Thanks for choosing us!</p>
+        
+    </div>
+    
+        
+        <a href="{% url 'trip_list' %}" style="text-decoration: none;">
+            <button class="print-btn">
+                <i class="fas fa-list"></i> Trips
+            </button>
+        </a>
+    
+    
+    
+    
+    
+    <!-- Download Button -->
+    <!-- Add these libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
+
+    <script>
+        function printAsPDF() {
+            const container = document.querySelector('.container');
+            html2canvas(container).then((canvas) => {
+                const imgData = canvas.toDataURL('image/png');
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const imgProps = pdf.getImageProperties(imgData);
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+    
+                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                pdf.save('trip_sheet.pdf');
+            });
+        }
+    </script>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends 'nav.html' %}
+{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Delete</title>
+    <style>
+        body {
+            background: url("{% static 'images/buble.jpg' %}") no-repeat center center fixed;
+            background-size: cover;
+            
+        }
+        section{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            
+        }
+
+        .confirm-container {
+            width: 100%;
+            max-width: 500px;
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+            border: 5px solid gold; /* Adds a golden border */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: #9ec023;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 0.5rem;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .btn-confirm {
+            background-color: #e74c3c;
+        }
+
+        .btn-confirm:hover {
+            background-color: #c0392b;
+        }
+
+        .btn-cancel {
+            background-color: #6e8efb;
+        }
+
+        .btn-cancel:hover {
+            background-color: #577ce6;
+        }
+    </style>
+</head>
+<body>
+    <section>
+    <div class="confirm-container">
+        <h1>Confirm Deletion</h1>
+        <p>Are you sure you want to delete feedback for Trip {{ feedback.trip.trip_number }}?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-confirm">Yes, delete</button>
+            <a href="{% url 'feedback_list' %}" class="btn btn-cancel">Cancel</a>
+        </form>
+    </div>
+    </section>
+</body>
+</html>
+{% endblock %}

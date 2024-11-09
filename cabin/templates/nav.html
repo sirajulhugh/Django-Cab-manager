@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %} 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cabby</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Background gradient and color */
+        .navbar {
+            background: linear-gradient(135deg, #fdd835, #ffeb3b, #fff176);
+
+
+            color: #302d2d;
+        }
+        .navbar-brand, .navbar-nav .nav-link {
+            color: #2a2626;
+            font-weight: 500;
+        }
+        .navbar-brand:hover, .navbar-nav .nav-link:hover {
+            color: #303033;
+        }
+        .navbar-brand h5 {
+            margin: 0;
+            font-weight: bold;
+        }
+        .navbar-brand small {
+            display: block;
+            font-size: 0.9rem;
+            color: #28282a;
+        }
+        .dropdown-menu {
+            background-color: #ded38b;
+            border: none;
+        }
+        .dropdown-item {
+            color: #312d2d;
+        }
+        .dropdown-item:hover {
+            background-color: #e8de79;
+        }
+        /* Golden line separator */
+        .navbar-separator {
+            height: 4px;
+            background-color: #9a850d; /* Golden color */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <!-- Logo and Motto -->
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+                <img src="{% static 'images/OIP.jpeg' %}" alt="Institution Logo" width="60" height="60" class="me-2">
+                <div>
+                    <!-- <h5>Company Name</h5> -->
+                    <small>On time every time</small>
+                </div>
+            </a>
+            
+            <!-- Responsive Toggle Button for Mobile -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <!-- Navbar Links -->
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <!-- Trip Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="tripDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Trip <i class="fas fa-route"></i>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="tripDropdown">
+                            <li><a class="dropdown-item" href="{% url 'add_trip' %}">Add Trip</a></li>
+                            <li><a class="dropdown-item" href="{% url 'trip_list' %}">Trip List</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Feedback Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link " href="{% url 'feedback_list' %}" > Feedbacks <i class="fas fa-comments"></i></a>
+                    </li>
+
+                    <!-- Other Links -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Logout <i class="fas fa-sign-out-alt"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Golden Line Separator -->
+    <div class="navbar-separator"></div>
+    
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+{% block content %}
+    <!-- Your content goes here -->
+{% endblock %}

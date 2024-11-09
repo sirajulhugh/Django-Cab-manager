@@ -1,0 +1,1097 @@
+{% extends 'nav.html' %}
+{% block content %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cabby</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        .dropdown-menu {
+            background-color: #fbef6e;
+            border: none;
+        }
+        .dropdown-item {
+            color: #514646;
+        }
+        .dropdown-item:hover {
+            background-color: #e6d557;
+        }
+         section {
+            background: url("{% static 'images/buble.jpg' %}") no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            margin: 0;
+            padding: 10px;
+        }
+
+        /* Container styling */
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            background-color: #fff;
+            /* padding: 10px; */
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease;
+            border: 5px solid gold; /* Adds a golden border */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Headings */
+        h2, h5 {
+            color: #ccc22f;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        /* Labels */
+        label {
+            font-weight: 500;
+        }
+
+        /* Button styling */
+        .btn-primary {
+            background-color: #9cb822;
+            color: #fff;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #7d8117;
+        }
+
+        /* Icon button styling */
+        .btn-icon {
+            background-color: #9ebb1c;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            padding: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn-icon:hover {
+            background-color: #727413;
+        }
+
+        /* Form control styling */
+        .form-control {
+            padding: 0.5rem;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            transition: border-color 0.3s;
+        }
+        .form-control:focus {
+            border-color: #abc517;
+            box-shadow: 0 0 5px rgba(110, 142, 251, 0.3);
+        }
+
+        .form-section {
+    border: 2px solid gold; /* Adds a golden border */
+    padding: 8px;
+    margin: 8px;
+    border-radius: 15px;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+    .form-section {
+        padding: 6px; /* Reduce padding on smaller screens */
+        margin: 6px; /* Reduce margin on smaller screens */
+        border-radius: 10px; /* Slightly smaller border radius */
+    }
+}
+
+/* Additional media query for extra small screens */
+@media (max-width: 600px) {
+    .form-section {
+        padding: 4px; /* Further reduce padding on very small screens */
+        margin: 4px; /* Further reduce margin */
+        border-radius: 8px; /* Smaller border radius */
+    }
+}
+
+/* Additional media query for extra small screens */
+@media (max-width: 480px) {
+    .form-section {
+        padding: 3px; /* Further reduce padding on very small screens */
+        margin: 3px; /* Further reduce margin */
+        border-radius: 8px; /* Smaller border radius */
+    }
+}
+
+
+        /* Section header */
+        .form-section h5 {
+            font-size: 1.3rem;
+            margin-top: 2rem;
+            color: #333;
+            border-bottom: 2px solid #f8f9fa;
+            padding-bottom: 0.5rem;
+        }
+        .form-sectio h5 {
+            font-size: 1.3rem;
+            margin-top: 2rem;
+            color: #333;
+            border-bottom: 2px solid #f8f9fa;
+            padding-bottom: 0.5rem;
+        }
+
+        /* Summary styling */
+        .summary {
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .row {
+                display: flex;
+                flex-direction: column;
+            }
+            .col-md-4, .col-lg-6, .col-md-8, .col-sm-10 {
+                width: 100%;
+            }
+            .form-section {
+                padding: 0;
+            }
+        }
+        .is-invalid {
+    border-color: red;
+}
+
+.custom-error {
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+.parent {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap; /* Allows items to wrap on smaller screens */
+}
+
+.form-sectio {
+    flex: 1;
+    margin: 0 10px; /* Optional: adjust the margin as needed */
+    border: 2px solid gold; /* Adds a golden border */
+    padding: 8px;
+    margin: 8px;
+    border-radius: 15px;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+    .parent {
+        flex-direction: column; /* Stacks the sections vertically */
+        align-items: center; /* Center the items horizontally */
+    }
+    
+    .form-sectio {
+        width: 100%; /* Full width on smaller screens */
+        margin: 10px 0; /* Adjust margins to fit better on small screens */
+    }
+}
+
+    </style>
+</head>
+<body>
+<section>
+    <div class="container">
+        <h2 class="my-4">Enter Trip Details</h2>
+        <form method="POST" action="{% url 'add_trip' %}" id="tripForm" novalidate>
+            {% csrf_token %}
+            <!-- Hidden field to store the trip_id -->
+            <input type="hidden" id="trip_id" name="trip_id">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4>Enter the data below:</h4>
+                <button id="getLastRideBtn" type="button" class="btn btn-primary">Get Last Ride</button>
+            </div>
+            
+            <div class="form-section">
+                <h5>Trip Information</h5>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="trip_number" class="form-label">Trip Number</label>
+                        <input type="text" id="trip_number" name="trip_number" class="form-control" readonly>
+                    </div>
+                    
+                    
+                    <div class="col-md-4 mb-3">
+                        <label for="vehicle_name" class="form-label">Vehicle Name</label>
+                        <input type="text" id="vehicle_name" name="vehicle_name" class="form-control" required>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="vehicle_number" class="form-label">Vehicle Number</label>
+                        <input 
+                            type="text" 
+                            id="vehicle_number" 
+                            name="vehicle_number" 
+                            class="form-control" 
+                            placeholder="e.g., MH 12 AB 1234" 
+                            required
+                        >
+                        <div id="vehicleNumberError" class="text-danger" style="display: none;">
+                            Please enter a valid Indian vehicle number (e.g., MH 12 AB 1234).
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4 mb-3">
+                        <label for="date" class="form-label">Date</label>
+                        <input type="date" id="date" name="date" class="form-control" required>
+                    </div>
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function() {
+                            const dateField = document.getElementById("date");
+                            if (dateField) {
+                                // Get today's date in YYYY-MM-DD format
+                                const today = new Date().toISOString().split("T")[0];
+                                dateField.value = today;
+                            }
+                        });
+                        </script>
+                                                               
+                    <div class="col-md-4 mb-3">
+                        <label for="driver_name" class="form-label">Driver Name</label>
+                        <input type="text" id="driver_name" name="driver_name" class="form-control" value="{{ driver_name }}" readonly>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="guest_name" class="form-label">Guest Name</label>
+                        <input type="text" id="guest_name" name="guest_name" class="form-control" required>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="end_date" class="form-label">End Date</label>
+                        <input type="date" id="end_date" name="end_date" class="form-control" value="{{ today }}" >
+                    </div>
+                </div>
+            </div>
+
+            
+        
+            <!-- Distance and Location Section -->
+            <div class="form-section">
+                <h5>Distance and Location</h5>
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <label for="starting_km" class="form-label">Starting KM</label>
+                        <input type="number" id="starting_km" name="starting_km" class="form-control"  required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="ending_km" class="form-label">Ending KM</label>
+                        <input type="number" id="ending_km" name="ending_km" class="form-control" value="0.0">
+                    </div>
+
+                    <script>
+                        document.getElementById("ending_km").addEventListener("input", function() {
+    const endingKm = parseFloat(document.getElementById("ending_km").value);
+
+    // Check if ending_km has a valid value (not empty and not 0.0)
+    if (!isNaN(endingKm) && endingKm > 0) {
+        calculateTotalDistance();
+        calculateTotalCharge();
+    }
+});
+                    </script>
+                    <div class="col-md-3 mb-3">
+                        <label for="starting_time" class="form-label">Starting Time</label>
+                        <input type="time" id="starting_time" name="starting_time" class="form-control" required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="ending_time" class="form-label">Ending Time</label>
+                        <input type="time" id="ending_time" name="ending_time" class="form-control" >
+                    </div>
+                    
+                    <div class="col-md-4 mb-3">
+                        <label for="starting_place" class="form-label">Starting Place</label>
+                        <input type="text" id="starting_place" name="starting_place" class="form-control" required>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="ending_place" class="form-label">Ending Place</label>
+                        <input type="text" id="ending_place" name="ending_place" class="form-control">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="trip_days" class="form-label">Trip Days</label>
+                        <input type="text" id="trip_days" class="form-control" readonly>
+                    </div>
+                </div>
+            </div>
+
+            
+    
+
+
+            
+
+            <!-- Charges Section -->
+            <div class="form-section">
+                <h5>Charges</h5>
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <label for="fixed_charge" class="form-label">Fixed Charge</label>
+                        <input type="number" id="fixed_charge" name="fixed_charge" class="form-control"  required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="max_kilometers" class="form-label">Max Kilometers</label>
+                        <input type="number" id="max_kilometers" name="max_kilometers" class="form-control"  required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="extra_running_charge" class="form-label">Extra Running Charge (per KM)</label>
+                        <input type="number" id="extra_running_charge" name="extra_running_charge" class="form-control"  required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="total_distance" class="form-label">Total Distance (KM)</label>
+                        <input type="text" id="total_distance" class="form-control" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <style>
+                /* Custom style for smaller icons */
+                .icon-small i {
+                    font-size: 1.0em; /* Adjust size as needed */
+                }
+            </style>
+            
+            <div class="parent">
+                <!-- Toll and Parking Section -->
+                <div class="col-lg-3 col-12 form-sectio">
+                    <h5>Toll and Parking</h5>
+                    <div id="toll-section" class="row">
+                        <div class="col-10 mb-3">
+                            <label for="toll_amount" class="form-label">Toll Amount</label>
+                            <input type="number" name="toll_amount[]" class="form-control" min="0" step="0.01" value="0">
+                        </div>
+                        <div class="col-2 mb-3 add-remove-btns">
+                            <span class="btn  add-toll icon-small"><i class="bi bi-plus"></i></span>
+                        </div>
+                    </div>
+            
+                    <div id="parking-section" class="row">
+                        <div class="col-10 mb-3">
+                            <label for="parking_amount" class="form-label">Parking Amount</label>
+                            <input type="number" name="parking_amount[]" class="form-control" min="0" step="0.01" value="0">
+                        </div>
+                        <div class="col-2 mb-3 add-remove-btns">
+                            <span class="btn  add-parking icon-small"><i class="bi bi-plus"></i></span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="permit" class="form-label">Permit</label>
+                        <input type="number" id="permit" name="permit" class="form-control" min="0" step="0.01" value="0">
+                    </div>
+                    <div class="mb-3">
+                        <label for="entrance" class="form-label">Entrance</label>
+                        <input type="number" id="entrance" name="entrance" class="form-control" min="0" step="0.01" value="0">
+                    </div>
+                </div>
+            
+                <!-- Other Charges Section -->
+                <div class="col-lg-3 col-12 form-sectio">
+                    <h5>Other Charges</h5>
+                    <div id="other-section" class="row">
+                        <div class="col-12 mb-3">
+                            <label for="reason" class="form-label">Other Charge Description</label>
+                            <input type="text" name="reason[]" class="form-control">
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="value" class="form-label">Other Charge Fee</label>
+                            <input type="number" name="value[]" class="form-control" min="0.0" step="0.01" value="0.0">
+                        </div>
+                        <div class="col-2 mb-3 add-remove-btns">
+                            <span class="btn  add-other icon-small"><i class="bi bi-plus"></i></span>
+                        </div>
+                    </div>
+                </div>
+            
+                <!-- Guide Information Section -->
+                
+                <div class="col-lg-3 col-12 form-sectio">
+                    <h5>Guide Information</h5>
+                    <div id="guide-section" class="row">
+                        <div class="col-12 mb-3">
+                            <label for="guide_place" class="form-label">Guide Place</label>
+                            <input type="text" name="guide_place[]" class="form-control">
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="guide_fee" class="form-label">Guide Fee</label>
+                            <input type="number" name="guide_fee[]" class="form-control" min="0" step="0.01" value="0">
+                        </div>
+                        <div class="col-2 mb-3 add-remove-btns">
+                            <span class="btn  add-guide icon-small"><i class="bi bi-plus"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+            
+            
+                
+
+<!-- Summary Section -->
+<div class="col-12 text-center mb-4">
+    <hr>
+    <h5 class="fw-bold">Summary</h5>
+</div>
+
+<div class="row justify-content-center">
+    <!-- Total Charge -->
+    <div class="col-lg-6 col-md-8 col-sm-10 mb-3">
+        <label for="charge" class="form-label">Total Charge</label>
+        <input type="text" id="charge" class="form-control" readonly>
+    </div>
+
+    <!-- Advance -->
+    <div class="col-lg-6 col-md-8 col-sm-10 mb-3">
+        <label for="advance" class="form-label">Advance</label>
+        <input type="number" id="advance" name="advance" class="form-control" min="0" step="0.01" value="0">
+    </div>
+
+    <!-- Balance -->
+    <div class="col-lg-6 col-md-8 col-sm-10 mb-3">
+        <label for="total_charge" class="form-label">Balance</label>
+        <input type="text" id="total_charge" class="form-control" readonly>
+    </div>
+</div>
+
+
+
+
+
+            <!-- Submit Button -->
+            <!-- <div style="text-align: center;">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div> -->
+            
+
+            <div style="text-align: center;">
+                <button type="submit" id="submitButton" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("tripForm").addEventListener("submit", function(event) {
+                let formIsValid = true;
+                let firstInvalidField = null; // Track the first invalid field
+        
+                // Select all required fields
+                const requiredFields = document.querySelectorAll("#tripForm .form-control[required]");
+        
+                requiredFields.forEach(field => {
+                    // Remove existing error messages, if any
+                    const existingError = field.parentNode.querySelector(".custom-error");
+                    if (existingError) existingError.remove();
+        
+                    // Create a new error message element
+                    const errorField = document.createElement("div");
+                    errorField.classList.add("text-danger", "custom-error");
+        
+                    // Check if the field is empty
+                    if (!field.value.trim()) {
+                        formIsValid = false;
+                        errorField.innerText = `${field.previousElementSibling.innerText} is required.`;
+                        field.parentNode.appendChild(errorField);
+                        field.classList.add("is-invalid");
+        
+                        // Set firstInvalidField to the first empty field
+                        if (!firstInvalidField) firstInvalidField = field;
+        
+                        // Remove the error message after 5 seconds
+                        setTimeout(() => {
+                            errorField.remove();
+                            field.classList.remove("is-invalid");
+                        }, 5000);
+                    } else {
+                        field.classList.remove("is-invalid");
+        
+                        // Additional validation for date fields
+                        if (field.type === "date" && !isValidDate(field.value)) {
+                            formIsValid = false;
+                            errorField.innerText = `${field.previousElementSibling.innerText} must be in YYYY-MM-DD format.`;
+                            field.parentNode.appendChild(errorField);
+                            field.classList.add("is-invalid");
+        
+                            // Set firstInvalidField to the first invalid date field
+                            if (!firstInvalidField) firstInvalidField = field;
+        
+                            // Remove the error message after 5 seconds
+                            setTimeout(() => {
+                                errorField.remove();
+                                field.classList.remove("is-invalid");
+                            }, 5000);
+                        }
+                    }
+                });
+        
+                // Scroll to the first invalid field if validation fails
+                if (!formIsValid) {
+                    event.preventDefault();
+                    if (firstInvalidField) {
+                        firstInvalidField.scrollIntoView({ behavior: "smooth", block: "center" });
+                        firstInvalidField.focus();
+                    }
+                    return false;
+                }
+            });
+        
+            // Function to validate date format (YYYY-MM-DD)
+            function isValidDate(dateString) {
+                // Regex to match YYYY-MM-DD format
+                const regex = /^\d{4}-\d{2}-\d{2}$/;
+                return regex.test(dateString);
+            }
+        });
+    </script>
+    
+    
+        
+        
+
+    
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add other charge rows dynamically
+        document.querySelector('.add-other').addEventListener('click', function() {
+            addRow('other-section', 'reason', 'value');
+        });
+    
+        function addRow(sectionId, descriptionInputName, feeInputName) {
+            const section = document.getElementById(sectionId);
+            const newRow = document.createElement('div');
+            newRow.classList.add('row');
+    
+            newRow.innerHTML = `
+                <div class="col-md-5 mb-3">
+                    <input type="text" name="${descriptionInputName}[]" class="form-control" placeholder="Description">
+                </div>
+                <div class="col-md-5 mb-3">
+                    <input type="number" name="${feeInputName}[]" class="form-control" placeholder="Fee" value="0.0">
+                </div>
+                <div class="col-md-2 mb-3 add-remove-btns">
+                    <span class="btn btn-danger remove icon-small"><i class="bi bi-dash"></i></span>
+                </div>
+            `;
+    
+            section.appendChild(newRow);
+    
+            // Add event listener for remove button
+            newRow.querySelector('.remove').addEventListener('click', function() {
+                // Set input values to zero before removing the row
+                newRow.querySelectorAll('input').forEach(input => input.value = '0.0');
+                calculateTotalCharge();  // Recalculate total charge
+                section.removeChild(newRow);  // Remove the row
+            });
+        }
+    });
+    </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Event listener for the "+" button
+        document.querySelector('.add-guide').addEventListener('click', function() {
+            addRow('guide-section', 'guide_place', 'guide_fee');
+        });
+
+        function addRow(sectionId, placeInputName, feeInputName) {
+            const section = document.getElementById(sectionId);
+            const newRow = document.createElement('div');
+            newRow.classList.add('row');
+
+            newRow.innerHTML = `
+                <div class="col-md-5 mb-3">
+                    <input type="text" name="${placeInputName}[]" class="form-control" placeholder="Guide Place">
+                </div>
+                <div class="col-md-5 mb-3">
+                    <input type="number" name="${feeInputName}[]" class="form-control" placeholder="Guide Fee" value="0">
+                </div>
+                <div class="col-md-2 mb-3 add-remove-btns">
+                    <span class="btn btn-danger remove icon-small"><i class="bi bi-dash"></i></span>
+                </div>
+            `;
+
+            // Event listener for the remove button
+            newRow.querySelector('.remove').addEventListener('click', function() {
+                section.removeChild(newRow);
+                calculateTotalCharge();  // Update total charge after row removal
+            });
+
+            section.appendChild(newRow);
+        }
+    });
+
+
+    </script>
+
+<script>
+    function calculateTripDays() {
+        const startDate = new Date(document.getElementById('date').value);
+        const endDate = new Date(document.getElementById('end_date').value);
+        const startTime = document.getElementById('starting_time').value;
+        const endTime = document.getElementById('ending_time').value;
+
+        if (startDate && endDate && startTime && endTime) {
+            const startDateTime = new Date(`${startDate.toISOString().split('T')[0]}T${startTime}`);
+            const endDateTime = new Date(`${endDate.toISOString().split('T')[0]}T${endTime}`);
+
+            const timeDiff = endDateTime - startDateTime;
+            const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+            document.getElementById('trip_days').value = daysDiff >= 1 ? daysDiff : 1;
+        }
+    }
+
+    function calculateTotalDistance() {
+        const startingKm = parseFloat(document.getElementById('starting_km').value) || 0;
+        const endingKm = parseFloat(document.getElementById('ending_km').value) || 0;
+
+        const totalDistance = endingKm - startingKm;
+        document.getElementById('total_distance').value = totalDistance >= 0 ? totalDistance : 0;
+    }
+
+    function calculateTotalCharge() {
+    let fixedCharge = parseFloat(document.getElementById('fixed_charge').value) || 0;
+    let maxKilometers = parseFloat(document.getElementById('max_kilometers').value) || 0;
+    let extraRunningCharge = parseFloat(document.getElementById('extra_running_charge').value) || 0;
+    let startingKm = parseFloat(document.getElementById('starting_km').value) || 0;
+    let endingKm = parseFloat(document.getElementById('ending_km').value) || 0;
+    let advancE = parseFloat(document.getElementById('advance').value) || 0;
+    let permiT = parseFloat(document.getElementById('permit').value) || 0;
+    let entrancE = parseFloat(document.getElementById('entrance').value) || 0;
+
+    // Calculate total distance and extra km charge
+    if ((endingKm-startingKm)>=maxKilometers){
+     minCharge = fixedCharge * maxKilometers
+    }
+    else{minCharge =fixedCharge * (endingKm-startingKm)}
+    let totalDistance = Math.max(endingKm - startingKm, 0);
+    let extraKm = Math.max(totalDistance - maxKilometers, 0);
+    let totalExtraCharge = extraKm * extraRunningCharge;
+
+    // Calculate total toll amount
+    let tollTotal = 0;
+    document.querySelectorAll('input[name="toll_amount[]"]').forEach(input => {
+        tollTotal += parseFloat(input.value) || 0;
+    });
+
+    // Calculate total parking amount
+    let parkingTotal = 0;
+    document.querySelectorAll('input[name="parking_amount[]"]').forEach(input => {
+        parkingTotal += parseFloat(input.value) || 0;
+    });
+
+    // Calculate total guide fee
+    let guideTotal = 0;
+    document.querySelectorAll('input[name="guide_fee[]"]').forEach(input => {
+        guideTotal += parseFloat(input.value) || 0;
+    });
+
+    // Calculate total other fee
+    let otherTotal = 0;
+    document.querySelectorAll('input[name="value[]"]').forEach(input => {
+        otherTotal += parseFloat(input.value) || 0;
+    });
+
+    // Add up all charges
+    const Charge = minCharge + totalExtraCharge + tollTotal + parkingTotal + guideTotal + otherTotal + permiT + entrancE;
+    document.getElementById('charge').value = Charge >= 0 ? `₹${Charge.toFixed(2)}` : '₹0.00';
+    const totalCharge = minCharge + totalExtraCharge + tollTotal + parkingTotal + guideTotal + otherTotal + permiT + entrancE- advancE;
+    document.getElementById('total_charge').value = totalCharge >= 0 ? `₹${totalCharge.toFixed(2)}` : '₹0.00';
+}
+
+    // Attach event listeners for dynamic calculations
+    document.getElementById('date').addEventListener('input', calculateTripDays);
+    document.getElementById('end_date').addEventListener('input', calculateTripDays);
+    document.getElementById('starting_time').addEventListener('input', calculateTripDays);
+    document.getElementById('ending_time').addEventListener('input', calculateTripDays);
+
+    document.getElementById('starting_km').addEventListener('input', () => {
+        calculateTotalDistance();
+        calculateTotalCharge();
+    });
+    document.getElementById('ending_km').addEventListener('input', () => {
+        calculateTotalDistance();
+        calculateTotalCharge();
+    });
+
+    document.getElementById('permit').addEventListener('input', calculateTotalCharge);
+    document.getElementById('entrance').addEventListener('input', calculateTotalCharge);
+    document.getElementById('advance').addEventListener('input', calculateTotalCharge);
+    document.getElementById('fixed_charge').addEventListener('input', calculateTotalCharge);
+    document.getElementById('max_kilometers').addEventListener('input', calculateTotalCharge);
+    document.getElementById('extra_running_charge').addEventListener('input', calculateTotalCharge);
+    document.getElementById('toll-section').addEventListener('input', calculateTotalCharge);
+    document.getElementById('parking-section').addEventListener('input', calculateTotalCharge);
+    document.getElementById('guide-section').addEventListener('input', calculateTotalCharge);
+    document.getElementById('other-section').addEventListener('input', calculateTotalCharge);
+    
+</script>
+
+    <!-- Bootstrap JS and Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Adding dynamic toll rows
+            document.querySelector('.add-toll').addEventListener('click', function() {
+                addRow('toll-section', 'toll_amount');
+            });
+        
+            // Adding dynamic parking rows
+            document.querySelector('.add-parking').addEventListener('click', function() {
+                addRow('parking-section', 'parking_amount');
+            });
+        
+            function addRow(sectionId, inputName) {
+                const section = document.getElementById(sectionId);
+                const newRow = document.createElement('div');
+                newRow.classList.add('row');
+        
+                newRow.innerHTML = `
+                    <div class="col-md-10 mb-3">
+                        <input type="number" name="${inputName}[]" class="form-control" value="0">
+                    </div>
+                    <div class="col-md-2 mb-3 add-remove-btns">
+                        <span class="btn btn-danger remove icon-small"><i class="bi bi-dash"></i></span>
+                    </div>
+                `;
+        
+                section.appendChild(newRow);
+        
+                // Set input value to 0 before removing row and recalculate total charge
+                newRow.querySelector('.remove').addEventListener('click', function() {
+                    const inputField = newRow.querySelector(`input[name="${inputName}[]"]`);
+                    if (inputField) {
+                        inputField.value = '0';  // Set the value to 0
+                        calculateTotalCharge();  // Recalculate total charge
+                    }
+                    section.removeChild(newRow);  // Remove the row after resetting the value
+                });
+        
+                // Trigger recalculation when any toll or parking input value changes
+                newRow.querySelector(`input[name="${inputName}[]"]`).addEventListener('input', calculateTotalCharge);
+            }
+        });
+        </script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                fetch('/generate-trip-number/')
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById("trip_number").value = data.trip_number;
+                    })
+                    .catch(error => console.error("Error fetching trip number:", error));
+            });
+        </script>
+    
+        <!-- JavaScript to handle Get Last Ride functionality -->
+        <script>
+            document.getElementById("getLastRideBtn").addEventListener("click", function(event) {
+                event.preventDefault();
+                const button = document.getElementById("getLastRideBtn");
+        
+                if (button.getAttribute("data-mode") === "New Trip") {
+                    // Clear fields for a new trip
+                    clearTripForm();
+                    fetch('/generate-trip-number/')
+                        .then(response => response.json())
+                        .then(data => {
+                            document.getElementById("trip_number").value = data.trip_number;
+                        });
+                    button.textContent = "Get Last Ride";
+                    button.setAttribute("data-mode", "get");
+                    document.getElementById("trip_id").value = "";  // Clear trip_id for new entry
+                } else {
+                    // Fetch the last ride details and populate the form for editing
+                    fetch("/get_last_ride/")
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                populateTripForm(data);
+                                button.textContent = "New Trip";
+                                button.setAttribute("data-mode", "New Trip");
+                                document.getElementById("trip_id").value = data.trip_id;  // Set trip_id to last trip
+                            } else {
+                                alert("No last ride found for this user.");
+                            }
+                        })
+                        .catch(error => console.error("Error:", error));
+                }
+            });
+        
+            function clearTripForm() {
+                document.getElementById("vehicle_name").value = "";
+                document.getElementById("vehicle_number").value = "";
+                document.getElementById("guest_name").value = "";
+                document.getElementById("starting_place").value = "";
+                document.getElementById("ending_place").value = "";
+                document.getElementById("starting_km").value = "";
+                document.getElementById("ending_km").value = "";
+                document.getElementById("starting_time").value = "";
+                document.getElementById("ending_time").value = "";
+                document.getElementById("date").value = "";
+                document.getElementById("end_date").value = "";
+                document.getElementById("fixed_charge").value = "";
+                document.getElementById("max_kilometers").value = "";
+                document.getElementById("extra_running_charge").value = "";
+                document.getElementById("permit").value = "";
+                document.getElementById("entrance").value = "";
+                document.getElementById("advance").value = "";
+                
+
+                // Reset calculated fields to 0
+                document.getElementById("trip_days").value = 0;
+                document.getElementById("charge").value = "₹0.00";
+                document.getElementById("total_charge").value = "₹0.00";
+
+                // Clear guide section
+                const guideSection = document.getElementById("guide-section");
+                guideSection.querySelectorAll(".row").forEach((row, index) => {
+                    if (index > 0) {
+                        // Remove dynamically added rows, leave the first row for reuse
+                        row.remove();
+                    } else {
+                        // Clear the first row's input values
+                        row.querySelectorAll("input").forEach(input => input.value = "");
+                    }
+                });
+
+                // Clear other charges section
+                const otherSection = document.getElementById("other-section");
+                otherSection.querySelectorAll(".row").forEach((row, index) => {
+                    if (index > 0) {
+                        // Remove dynamically added rows, leave the first row for reuse
+                        row.remove();
+                    } else {
+                        // Clear the first row's input values
+                        row.querySelectorAll("input").forEach(input => input.value = "");
+                    }
+                });
+
+                // Clear toll section
+                const tollSection = document.getElementById("toll-section");
+                tollSection.querySelectorAll(".row").forEach((row, index) => {
+                    if (index > 0) {
+                        // Remove dynamically added rows, leave the first row for reuse
+                        row.remove();
+                    } else {
+                        // Clear the first row's input values
+                        row.querySelectorAll("input").forEach(input => input.value = "");
+                    }
+                });
+
+                // Clear parking section
+                const parkingSection = document.getElementById("parking-section");
+                parkingSection.querySelectorAll(".row").forEach((row, index) => {
+                    if (index > 0) {
+                        // Remove dynamically added rows, leave the first row for reuse
+                        row.remove();
+                    } else {
+                        // Clear the first row's input values
+                        row.querySelectorAll("input").forEach(input => input.value = "");
+                    }
+                });
+            }
+
+
+        
+            function populateTripForm(data) {
+                document.getElementById("trip_number").value = data.trip_number;
+                document.getElementById("vehicle_name").value = data.vehicle_name;
+                document.getElementById("vehicle_number").value = data.vehicle_number;
+                document.getElementById("guest_name").value = data.guest_name;
+                document.getElementById("starting_place").value = data.starting_place;
+                document.getElementById("ending_place").value = data.ending_place;
+                document.getElementById("starting_km").value = data.starting_km;
+                document.getElementById("ending_km").value = data.ending_km;
+                document.getElementById("starting_time").value = data.starting_time;
+                document.getElementById("ending_time").value = data.ending_time;
+                document.getElementById("date").value = data.date;
+                document.getElementById("end_date").value = data.end_date;
+                document.getElementById("fixed_charge").value = data.fixed_charge;
+                document.getElementById("max_kilometers").value = data.max_kilometers;
+                document.getElementById("extra_running_charge").value = data.extra_running_charge;
+                document.getElementById("driver_name").value = data.driver_name;
+                document.getElementById("permit").value = data.permit;
+                document.getElementById("entrance").value = data.entrance;
+                document.getElementById("advance").value = data.advance;
+
+                // Populate guide rows
+                const guideSection = document.getElementById("guide-section");
+                if (guideSection) {
+                    data.guides.forEach(guide => {
+                        const newGuideRow = document.createElement("div");
+                        newGuideRow.classList.add("row");
+
+                        newGuideRow.innerHTML = `
+                            <div class="col-md-5 mb-3">
+                                <input type="text" name="guide_place[]" class="form-control" placeholder="Guide Place" value="${guide.guide_place}">
+                            </div>
+                            <div class="col-md-5 mb-3">
+                                <input type="number" name="guide_fee[]" class="form-control" placeholder="Guide Fee" value="${guide.guide_fee}">
+                            </div>
+                            <div class="col-md-2 mb-3 add-remove-btns">
+                                <span class="btn btn-danger remove icon-small"><i class="bi bi-dash"></i></span>
+                            </div>
+                        `;
+
+                        newGuideRow.querySelector(".remove").addEventListener("click", function() {
+                            newGuideRow.remove();
+                        });
+
+                        guideSection.appendChild(newGuideRow);
+                    });
+                } else {
+                    console.error("Guide section not found!");
+                }
+
+                // Populate other fee rows
+                const otherFeeSection = document.getElementById("other-section");
+                if (otherFeeSection) {
+                    data.other_fees.forEach(fee => {
+                        const newOtherFeeRow = document.createElement("div");
+                        newOtherFeeRow.classList.add("row");
+
+                        newOtherFeeRow.innerHTML = `
+                            <div class="col-md-5 mb-3">
+                                <input type="text" name="reason[]" class="form-control" placeholder="Reason" value="${fee.reason}">
+                            </div>
+                            <div class="col-md-5 mb-3">
+                                <input type="number" name="value[]" class="form-control" placeholder="Fee Value" value="${fee.value}">
+                            </div>
+                            <div class="col-md-2 mb-3 add-remove-btns">
+                                <span class="btn btn-danger remove icon-small"><i class="bi bi-dash"></i></span>
+                            </div>
+                        `;
+
+                        newOtherFeeRow.querySelector(".remove").addEventListener("click", function() {
+                            newOtherFeeRow.remove();
+                        });
+
+                        otherFeeSection.appendChild(newOtherFeeRow);
+                    });
+                } else {
+                    console.error("Other fee section not found!");
+                }
+
+                // Populate toll rows
+                const tollSection = document.getElementById("toll-section");
+                if (tollSection) {
+                    data.tolls.forEach(toll => {
+                        const newTollRow = document.createElement("div");
+                        newTollRow.classList.add("row");
+
+                        newTollRow.innerHTML = `
+                            <div class="col-md-5 mb-3">
+                                <input type="number" name="toll_amount[]" class="form-control" placeholder="Toll Amount" value="${toll.amount}">
+                            </div>
+                            <div class="col-md-2 mb-3 add-remove-btns">
+                                <span class="btn btn-danger remove icon-small"><i class="bi bi-dash"></i></span>
+                            </div>
+                        `;
+
+                        newTollRow.querySelector(".remove").addEventListener("click", function() {
+                            newTollRow.remove();
+                        });
+
+                        tollSection.appendChild(newTollRow);
+                    });
+                } else {
+                    console.error("Toll section not found!");
+                }
+
+                // Populate parking fee rows
+                const parkingSection = document.getElementById("parking-section");
+                if (parkingSection) {
+                    data.parking_fees.forEach(parking => {
+                        const newParkingRow = document.createElement("div");
+                        newParkingRow.classList.add("row");
+
+                        newParkingRow.innerHTML = `
+                            <div class="col-md-5 mb-3">
+                                <input type="number" name="parking_amount[]" class="form-control" placeholder="Parking Amount" value="${parking.amount}">
+                            </div>
+                            <div class="col-md-2 mb-3 add-remove-btns">
+                                <span class="btn btn-danger remove icon-small"><i class="bi bi-dash"></i></span>
+                            </div>
+                        `;
+
+                        newParkingRow.querySelector(".remove").addEventListener("click", function() {
+                            newParkingRow.remove();
+                        });
+
+                        parkingSection.appendChild(newParkingRow);
+                    });
+                } else {
+                    console.error("Parking section not found!");
+                }
+
+                // Perform calculations if functions exist
+                if (typeof calculateTripDays === "function") calculateTripDays();
+                if (typeof calculateTotalDistance === "function") calculateTotalDistance();
+                if (typeof calculateTotalCharge === "function") calculateTotalCharge();
+            }
+
+
+
+
+      
+        
+        </script>
+
+        
+    
+        
+        
+        
+        
+    
+        <!-- Vehicle Number Validation -->
+<script>
+    document.getElementById('vehicle_number').addEventListener('input', function() {
+        const vehicleNumber = this.value.toUpperCase();
+        const vehicleNumberError = document.getElementById('vehicleNumberError');
+
+        // Updated regex to match all Indian state vehicle number formats
+        const regex = /^[A-Z]{2}\s\d{2}\s([A-Z]{1,2}\s)?\d{4}$/;
+
+        if (regex.test(vehicleNumber)) {
+            vehicleNumberError.style.display = 'none';
+            this.classList.remove('is-invalid');
+            this.classList.add('is-valid');
+        } else {
+            vehicleNumberError.style.display = 'block';
+            this.classList.add('is-invalid');
+            this.classList.remove('is-valid');
+        }
+    });
+</script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    </div>
+        
+        
+</section>       
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,163 @@
+{% extends 'nav.html' %}
+{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cabby</title>
+    <style>
+        section {
+            background: url("{% static 'images/buble.jpg' %}") no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 500px;
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: #6e8efb;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            font-weight: 500;
+            color: #6e8efb;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        select, input[type="text"], textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            margin-bottom: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        select:focus, input[type="text"]:focus, textarea:focus {
+            border-color: #6e8efb;
+            box-shadow: 0 0 5px rgba(110, 142, 251, 0.5);
+        }
+
+        button[type="submit"] {
+            background-color: #6e8efb;
+            color: #fff;
+            border: none;
+            padding: 0.75rem;
+            font-weight: bold;
+            border-radius: 8px;
+            width: 100%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #577ce6;
+        }
+
+        @media (max-width: 600px) {
+            .form-container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<section>
+    <div class="form-container">
+        <h1>Submit Feedback</h1>
+        <form method="POST">
+            {% csrf_token %}
+            
+            <label for="trip">Trip Number:</label>
+            <select id="trip" name="trip" required>
+                <option value="">Select Trip</option>
+                {% for trip in trips %}
+                    <option value="{{ trip.id }}">{{ trip.trip_number }}</option>
+                {% endfor %}
+            </select>
+            
+            <label for="driver_name">Driver Name:</label>
+            <input type="text" id="driver_name" name="driver_name" readonly required>
+            
+            <label for="guest_behavior">Guest Behavior:</label>
+            <select id="guest_behavior" name="guest_behavior" required>
+                <option value="Excellent">Excellent</option>
+                <option value="Good">Good</option>
+                <option value="Average">Average</option>
+                <option value="Poor">Poor</option>
+            </select>
+
+            <label for="trip_conditions">Trip Conditions:</label>
+            <select id="trip_conditions" name="trip_conditions" required>
+                <option value="Smooth">Smooth</option>
+                <option value="Some difficulties">Some difficulties</option>
+                <option value="Challenging">Challenging</option>
+            </select>
+
+            <label for="route_difficulty">Route Difficulty:</label>
+            <select id="route_difficulty" name="route_difficulty" required>
+                <option value="Easy">Easy</option>
+                <option value="Moderate">Moderate</option>
+                <option value="Difficult">Difficult</option>
+            </select>
+
+            <label for="traffic_conditions">Traffic Conditions:</label>
+            <select id="traffic_conditions" name="traffic_conditions" required>
+                <option value="Clear">Clear</option>
+                <option value="Moderate">Moderate</option>
+                <option value="Heavy">Heavy</option>
+            </select>
+
+            <label for="additional_comments">Additional Comments:</label>
+            <textarea id="additional_comments" name="additional_comments" required></textarea>
+
+            <button type="submit">Submit Feedback</button>
+        </form>
+    </div>
+
+    <script>
+        $('#trip').change(function() {
+            var tripId = $(this).val();
+            if (tripId) {
+                $.ajax({
+                    url: '/get-trip-driver/' + tripId + '/',
+                    success: function(data) {
+                        $('#driver_name').val(data.driver_name);
+                    }
+                });
+            } else {
+                $('#driver_name').val('');
+            }
+        });
+    </script>
+</section>
+</body>
+</html>
+{% endblock %}
